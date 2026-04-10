@@ -1,10 +1,27 @@
 "use client";
+import {supabase} from "@/lib/supabase-client"
 
 import { useState } from "react";
 import { ShieldCheck, BriefcaseMedical } from "lucide-react";
 
 export default function ClinicalPersonnel() {
   const [remember, setRemember] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = async () => {
+    const { data, error} = await 
+    supabase.auth.signUp(
+      {
+        email,
+        password,
+      });
+
+      console.log("data: ", data);
+      console.log("error: ", error);
+    
+  }
+  
 
   return (
     <section className="bg-[#eef0f4] px-8 pt-10 pb-8 flex flex-col relative overflow-hidden border-r border-gray-200">
@@ -35,6 +52,7 @@ export default function ClinicalPersonnel() {
               type="text"
               placeholder="RN-XXXX-XXXX"
               className="w-full text-[13px] text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -47,6 +65,7 @@ export default function ClinicalPersonnel() {
               type="password"
               placeholder="••••••••"
               className="w-full text-[13px] bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <button className="mt-2 text-[12px] font-medium text-emerald-600 hover:underline">
               Forgot password?
@@ -67,7 +86,7 @@ export default function ClinicalPersonnel() {
           </label>
 
           {/* CTA */}
-          <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] rounded-xl py-3 transition-colors">
+          <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] rounded-xl py-3 transition-colors"  onClick={handleSignup}>
             Sign In to Clinical Portal
           </button>
         </div>
