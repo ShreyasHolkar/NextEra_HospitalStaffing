@@ -4,7 +4,9 @@ import ClinicalPersonnel from "@/components/ui/ClinicalPersonnel";
 import PersonnelSolutions from "@/components/ui/PersonnelSolutions";
 import Footer from "@/components/ui/Footer";
 
+
 export default function Home() {
+  
   return (
     <div className="min-h-screen bg-[#eef0f4] flex flex-col">
       <Header />
