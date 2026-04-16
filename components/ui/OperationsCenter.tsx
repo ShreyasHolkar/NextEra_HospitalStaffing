@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Users } from "lucide-react";
 
 export default function OperationsCenter() {
   const [remember, setRemember] = useState(false);
+  const router = useRouter();
 
   return (
     <section className="bg-[#eef0f4] px-8 pt-10 pb-8 flex flex-col relative overflow-hidden border-r border-gray-200">
@@ -67,7 +69,7 @@ export default function OperationsCenter() {
           </label>
 
           {/* CTA */}
-          <button className="w-full bg-[#1a5cf8] hover:bg-[#1450e0] text-white font-semibold text-[13px] rounded-xl py-3 transition-colors">
+          <button onClick={() => router.push("/admin_overview")} className="w-full bg-[#1a5cf8] hover:bg-[#1450e0] text-white font-semibold text-[13px] rounded-xl py-3 transition-colors">
             Sign In to Dashboard
           </button>
         </div>

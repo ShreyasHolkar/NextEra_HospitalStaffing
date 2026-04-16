@@ -22,7 +22,7 @@ export default function ClinicalPersonnel() {
     // Simulate auth — replace with real API call later
     setTimeout(() => {
       setLoading(false);
-      router.push("/dashboard");
+      router.push("/nurse_dashboard");
     }, 800);
   };
 
