@@ -10,10 +10,13 @@ import {
   Database,
   LifeBuoy,
   LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const Sidebar = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
+  const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
 
   const menuItems = [
@@ -26,73 +29,89 @@ const Sidebar = () => {
 
   return (
     <aside
-      className="flex flex-col select-none"
+      className="flex flex-col select-none transition-all duration-300"
       style={{
-        width: '172px',
-        minWidth: '172px',
+        width: collapsed ? '60px' : '172px',
+        minWidth: collapsed ? '60px' : '172px',
         minHeight: '100vh',
         background: '#e8eef8',
-        padding: '20px 10px 24px 10px',
+        padding: collapsed ? '20px 10px 24px 10px' : '20px 10px 24px 10px',
+        overflow: 'hidden',
       }}
     >
-      {/* Logo */}
+      {/* Logo row with hamburger */}
       <div
         className="flex items-center"
-        style={{ gap: '10px', marginBottom: '28px', paddingLeft: '6px' }}
+        style={{
+          gap: '8px',
+          marginBottom: '28px',
+          paddingLeft: collapsed ? '2px' : '6px',
+          justifyContent: collapsed ? 'center' : 'flex-start',
+        }}
       >
-        <div
-          className="flex items-center justify-center rounded-xl shrink-0"
-          style={{ width: 34, height: 34, background: '#1a56c4' }}
+        {/* Hamburger button */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="flex items-center justify-center rounded-lg transition-colors hover:bg-white/60 shrink-0"
+          style={{ width: 28, height: 28, color: '#7a9cc8' }}
         >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-            stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-          </svg>
-        </div>
-        <div className="flex flex-col" style={{ gap: '3px' }}>
-          <span style={{ fontSize: 13.5, fontWeight: 700, color: '#1e3a6e', lineHeight: 1 }}>
-            StaffPulse
-          </span>
-          <span style={{ fontSize: 8, fontWeight: 600, color: '#7a9cc8', letterSpacing: '0.10em', textTransform: 'uppercase', lineHeight: 1 }}>
-            Clinical Curator
-          </span>
-        </div>
+          {collapsed ? <Menu size={16} /> : <X size={16} />}
+        </button>
+
+        {/* Brand — hidden when collapsed */}
+        {!collapsed && (
+          <>
+            <div
+              className="flex items-center justify-center rounded-xl shrink-0"
+              style={{ width: 34, height: 34, background: '#1a56c4' }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <div className="flex flex-col" style={{ gap: '3px' }}>
+              <span style={{ fontSize: 13.5, fontWeight: 700, color: '#1e3a6e', lineHeight: 1 }}>
+                StaffPulse
+              </span>
+              <span style={{ fontSize: 8, fontWeight: 600, color: '#7a9cc8', letterSpacing: '0.10em', textTransform: 'uppercase', lineHeight: 1 }}>
+                Clinical Curator
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Main nav */}
-      <nav
-        className="flex flex-col"
-        style={{ gap: '4px', paddingLeft: '2px', paddingRight: '2px' }}
-      >
+      <nav className="flex flex-col" style={{ gap: '4px', paddingLeft: '2px', paddingRight: '2px' }}>
         {menuItems.map((item) => (
           <NavItem
             key={item.id}
             icon={item.icon}
             label={item.label}
             isActive={activeItem === item.id}
+            collapsed={collapsed}
             onClick={() => setActiveItem(item.id)}
           />
         ))}
       </nav>
 
-      {/* Spacer */}
       <div style={{ flex: 1 }} />
 
       {/* Footer */}
-      <div
-        className="flex flex-col"
-        style={{ gap: '4px', paddingLeft: '2px', paddingRight: '2px' }}
-      >
+      <div className="flex flex-col" style={{ gap: '4px', paddingLeft: '2px', paddingRight: '2px' }}>
         <NavItem
           icon={<LifeBuoy size={16} />}
           label="Support"
           isActive={activeItem === 'Support'}
+          collapsed={collapsed}
           onClick={() => setActiveItem('Support')}
         />
         <NavItem
           icon={<LogOut size={16} />}
           label="Sign Out"
           isActive={activeItem === 'Sign Out'}
+          collapsed={collapsed}
           onClick={() => router.push('/')}
         />
       </div>
@@ -104,11 +123,13 @@ const NavItem = ({
   icon,
   label,
   isActive,
+  collapsed,
   onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   isActive: boolean;
+  collapsed: boolean;
   onClick: () => void;
 }) => {
   const [hovered, setHovered] = React.useState(false);
@@ -118,11 +139,13 @@ const NavItem = ({
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      title={collapsed ? label : undefined}
       style={{
         display: 'flex',
         alignItems: 'center',
+        justifyContent: collapsed ? 'center' : 'flex-start',
         gap: '9px',
-        padding: '8px 12px',
+        padding: collapsed ? '8px' : '8px 12px',
         borderRadius: '10px',
         cursor: 'pointer',
         transition: 'background 0.18s',
@@ -136,18 +159,20 @@ const NavItem = ({
       <span style={{ color: isActive ? '#1a4fad' : '#7a9cc8', flexShrink: 0, display: 'flex' }}>
         {icon}
       </span>
-      <span
-        style={{
-          fontSize: 13,
-          fontWeight: isActive ? 700 : 500,
-          color: isActive ? '#1a4fad' : '#4e6fa3',
-          lineHeight: 1.2,
-          whiteSpace: 'nowrap',
-          transition: 'color 0.18s',
-        }}
-      >
-        {label}
-      </span>
+      {!collapsed && (
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: isActive ? 700 : 500,
+            color: isActive ? '#1a4fad' : '#4e6fa3',
+            lineHeight: 1.2,
+            whiteSpace: 'nowrap',
+            transition: 'color 0.18s',
+          }}
+        >
+          {label}
+        </span>
+      )}
     </div>
   );
 };
